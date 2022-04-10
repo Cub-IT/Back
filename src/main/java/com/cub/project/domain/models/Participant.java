@@ -18,7 +18,7 @@ public class Participant {
     @JoinColumn(nullable = false)
     private User user;
     @Column(name = "role_id", nullable = false)
-    @Convert(converter = RoleConverter.class)
+    @Enumerated(EnumType.STRING)
     private Role role;
     @Column(name = "assertion_date", nullable = false)
     @Convert(converter = DateConverter.class)
