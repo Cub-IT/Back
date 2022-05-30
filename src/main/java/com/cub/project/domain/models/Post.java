@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "post_id")
     private long id;
     @Column(name = "creation_date")
     @Convert(converter = DateConverter.class)
