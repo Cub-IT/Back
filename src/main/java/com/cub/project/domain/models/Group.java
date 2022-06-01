@@ -1,6 +1,8 @@
 package com.cub.project.domain.models;
 
 import com.cub.project.domain.converter.DateConverter;
+import lombok.Builder;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Groups")
+@Data
+@Builder
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

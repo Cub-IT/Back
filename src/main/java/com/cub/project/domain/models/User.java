@@ -1,8 +1,13 @@
 package com.cub.project.domain.models;
 
+import lombok.Builder;
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
+@Data
+@Builder
 @Entity
 @Table(name = "Users")
 public class User {
