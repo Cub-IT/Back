@@ -73,4 +73,8 @@ public class UserService implements UserDetailsService {
             log.error("Login not unique: " + userDTO.getName());
         }
     }
+
+    public void leaveGroup(long userId, long groupId) {
+
+    }
 }
