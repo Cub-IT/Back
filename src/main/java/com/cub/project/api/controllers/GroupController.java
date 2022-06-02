@@ -26,8 +26,9 @@ public class GroupController {
 
     @PreAuthorize("")
     @PostMapping("new")
-    public ResponseEntity<?> createGroup() {
-        return null;
+    public ResponseEntity<?> createGroup(@RequestBody GroupDto group) {
+        groupService.createGroup(group);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("")
@@ -38,20 +39,23 @@ public class GroupController {
 
     @PreAuthorize("")
     @PatchMapping("{groupId}/remove/participant/{participantId}")
-    public ResponseEntity<?> removeParticipant() {
-        return null;
+    public ResponseEntity<?> removeParticipant(@PathVariable long groupId, @PathVariable long userId) {
+        groupService.removeParticipant(groupId, userId);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("")
     @PatchMapping("{groupId}/remove/post/{postId}")
     public ResponseEntity<?> removePost(@PathVariable long groupId, @PathVariable long postId) {
-        return null;
+        groupService.removePost(groupId, postId);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("")
     @PatchMapping("{groupId}/edit")
-    public ResponseEntity<?> editGroup(@PathVariable long groupId) {
-        return null;
+    public ResponseEntity<?> editGroup(@PathVariable long groupId, @RequestBody GroupDto group) {
+        groupService.updateGroup(group);
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("")

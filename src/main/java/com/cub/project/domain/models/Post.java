@@ -1,12 +1,14 @@
 package com.cub.project.domain.models;
 
 import com.cub.project.domain.converter.DateConverter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "Posts")
+@Data
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

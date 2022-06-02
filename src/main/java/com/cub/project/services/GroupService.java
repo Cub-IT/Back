@@ -40,16 +40,20 @@ public class GroupService {
 
     public void updateGroup(GroupDto groupDto) {
         Group group = getGroupById(groupDto.getId());
-
         group.setName(groupDto.getName());
         group.setCode(groupDto.getCode());
-
-        try {
-            groupRepository.save(group);
-        } catch (DataIntegrityViolationException e) {
-            log.error("Login not unique: " + groupDto.getName());
-        }
+        groupRepository.save(group);
     }
 
+    public void removePost(long groupId, long postId) {
+        Group group = getGroupById(groupId);
+        group.getPosts().removeIf((post) -> post.getId() == postId);
+        groupRepository.save(group);
+    }
 
+    public void removeParticipant(long groupId, long userId) {
+        Group group = getGroupById(groupId);
+        group.getParticipants().removeIf((user) -> user.getId() == userId);
+        groupRepository.save(group);
+    }
 }
