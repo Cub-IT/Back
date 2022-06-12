@@ -1,17 +1,11 @@
-package com.cub.project.services;
+package com.cub.project.service;
 
 import com.cub.project.domain.dto.GroupDto;
-import com.cub.project.domain.dto.RegistrationUserDTO;
-import com.cub.project.domain.dto.UpdateUserDTO;
 import com.cub.project.domain.models.Group;
-import com.cub.project.domain.models.User;
 import com.cub.project.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Log4j2
 @Service

@@ -1,17 +1,18 @@
 package com.cub.project.api.controllers;
 
-import com.cub.project.domain.dto.RegistrationUserDTO;
-import com.cub.project.domain.dto.UpdateUserDTO;
 import com.cub.project.domain.dto.UserDto;
+import com.cub.project.domain.models.Group;
 import com.cub.project.domain.models.Participant;
-import com.cub.project.services.UserService;
+import com.cub.project.domain.models.User;
+import com.cub.project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -20,41 +21,41 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
 
-    @PreAuthorize("")
+    //@PreAuthorize("")
     @GetMapping("{userId}")
-    public ResponseEntity<?> getUserDetails(@PathVariable long userId) {
+    public ResponseEntity<User> getUserDetails(@PathVariable long userId) {
         return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
     }
 
-    @PreAuthorize("")
+    //@PreAuthorize("")
     @GetMapping("{userId}/groups")
-    public ResponseEntity<?> getUsersGroups(@PathVariable long userId) {
+    public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId) {
         return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
                 .map(Participant::getGroup).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
     }
 
-    @PreAuthorize("")
+    //@PreAuthorize("")
     @PatchMapping("{userId}/edit")
-    public ResponseEntity<?> editUser(@PathVariable long userId, UpdateUserDTO user) {
+    public ResponseEntity<?> editUser(@PathVariable long userId, UserDto user) {
         userService.updateUser(userId, user);
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("")
+    //@PreAuthorize("")
     @PostMapping("new")
-    public ResponseEntity<?> newUser(@RequestBody RegistrationUserDTO user) {
+    public ResponseEntity<?> newUser(@RequestBody UserDto user) {
         userService.createUser(user);
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("")
+    //@PreAuthorize("")
     @DeleteMapping("{userId}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("")
+    //@PreAuthorize("")
     @PatchMapping("{userId}/leave/{groupId}")
     public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId) {
         userService.leaveGroup(userId, groupId);

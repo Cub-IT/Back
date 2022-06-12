@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -24,6 +25,9 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @ManyToMany
+    private Set<UserRole> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Participant> participants;
