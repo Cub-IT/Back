@@ -25,9 +25,9 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    @ManyToMany
-    private Set<UserRole> roles;
+//пока закомментил, хз, надо или нет, не удаляй
+//    @ManyToMany
+//    private Set<UserRole> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Participant> participants;

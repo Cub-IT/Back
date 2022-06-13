@@ -14,18 +14,24 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private long id;
+
     @Column(name = "creation_date")
     @Convert(converter = DateConverter.class)
     private LocalDate creationDate;
+
     @Column(name = "edit_date")
     @Convert(converter = DateConverter.class)
     private LocalDate editDate;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User creator;
+
     @ManyToOne
     private Group group;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "description")
     private String description;
 }

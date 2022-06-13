@@ -18,18 +18,17 @@ import com.cub.project.repository.UserRepository;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User findByName(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username);
-        if (Objects.isNull(user)) {
+        if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return (UserDetails) user;
+        return user;
     }
 
     public User getUserById(long id) {

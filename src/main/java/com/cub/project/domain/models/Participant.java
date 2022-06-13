@@ -16,15 +16,19 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "participant_id")
     private long id;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(nullable = false)
     private User user;
+
     @Column(name = "role_id", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Column(name = "assertion_date", nullable = false)
     @Convert(converter = DateConverter.class)
     private LocalDate assertionDate;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Group group;
 }
