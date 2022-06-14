@@ -36,6 +36,14 @@ public class UserService {
                 new IllegalArgumentException("Invalid user id" + id));
     }
 
+    public User getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException(email);
+        }
+        return user;
+    }
+
     public void createUser(UserDto userDTO) {
         User user = User.builder()
                 .name(userDTO.getName())

@@ -43,7 +43,7 @@ public class UserController {
 
     @PreAuthorize("")
     @PostMapping("new")
-    public ResponseEntity<?> newUser(@RequestBody UserDto user) {
+    public ResponseEntity<?> newUser(UserDto user) {
         userService.createUser(user);
         return ResponseEntity.ok().build();
     }
