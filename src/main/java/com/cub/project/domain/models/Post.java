@@ -1,7 +1,9 @@
 package com.cub.project.domain.models;
 
 import com.cub.project.domain.converter.DateConverter;
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.http.ContentDisposition;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Posts")
 @Data
+@Builder
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +37,5 @@ public class Post {
 
     @Column(name = "description")
     private String description;
+
 }
