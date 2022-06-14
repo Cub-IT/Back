@@ -15,7 +15,7 @@ public class GroupService {
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Invalid user id" + id));
+                new IllegalArgumentException("Invalid group id" + id));
     }
 
     public void createGroup(GroupDto groupDto) {
