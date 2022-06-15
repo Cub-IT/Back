@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class GroupDto {
     private long id;
-    private String name;
+    private String title;
+    private String description;
     private String code;
     private LocalDate creationDate;
 }
