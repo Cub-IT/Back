@@ -26,16 +26,17 @@ public class Post {
     @Convert(converter = DateConverter.class)
     private LocalDate editDate;
 
+    @Column(name="description")
+    private String description;
+
+    @Column(name = "title")
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User creator;
 
     @ManyToOne
     private Group group;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "description")
-    private String description;
 
 }

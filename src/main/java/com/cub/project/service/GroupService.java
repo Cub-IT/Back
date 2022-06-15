@@ -20,7 +20,8 @@ public class GroupService {
 
     public void createGroup(GroupDto groupDto) {
         Group group = Group.builder()
-                .name(groupDto.getName())
+                .title(groupDto.getTitle())
+                .description(groupDto.getDescription())
                 .code(groupDto.getCode())
                 .creationDate(groupDto.getCreationDate())
                 .build();
@@ -34,7 +35,8 @@ public class GroupService {
 
     public void updateGroup(GroupDto groupDto) {
         Group group = getGroupById(groupDto.getId());
-        group.setName(groupDto.getName());
+        group.setTitle(groupDto.getTitle());
+        group.setDescription(groupDto.getDescription());
         group.setCode(groupDto.getCode());
         groupRepository.save(group);
     }

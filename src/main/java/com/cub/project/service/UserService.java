@@ -38,7 +38,8 @@ public class UserService {
 
     public void createUser(UserDto userDTO) {
         User user = User.builder()
-                .name(userDTO.getName())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword())).build();
         userRepository.save(user);
@@ -53,7 +54,8 @@ public class UserService {
     public void updateUser(long id, UserDto userDTO) {
         User user = getUserById(id);
 
-        user.setName(userDTO.getName());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
         if (Objects.nonNull(userDTO.getPassword()) && userDTO.getPassword().length() > 0) {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
@@ -61,7 +63,7 @@ public class UserService {
         try {
             userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            log.error("Login not unique: " + userDTO.getName());
+            log.error("Login not unique: " + userDTO.getEmail());
         }
     }
 

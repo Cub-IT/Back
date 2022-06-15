@@ -18,8 +18,11 @@ public class Group {
     @Column(name = "group_id")
     private long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name="description")
+    private String description;
 
     @Column(name = "code", nullable = false)
     private String code;
