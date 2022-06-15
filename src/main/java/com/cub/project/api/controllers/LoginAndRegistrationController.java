@@ -30,9 +30,9 @@ public class LoginAndRegistrationController {
     }
 
     @PostMapping("/reg")
-    public ResponseEntity<?> registration(UserDto user) {
+    public ResponseEntity<?> registration(@RequestBody @Valid UserDto user) {
         userService.createUser(user);
         securityService.login(user.getEmail(), user.getPassword());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
     }
 }
