@@ -23,13 +23,13 @@ public class UserService {
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
 
-    public User findByName(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-        return user;
-    }
+//    public User findByName(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByName(username);
+//        if (user == null) {
+//            throw new UsernameNotFoundException(username);
+//        }
+//        return user;
+//    }
 
     public User getUserById(long id) {
         return userRepository.findById(id).orElseThrow(() ->

@@ -2,7 +2,9 @@ package com.cub.project.domain.models;
 
 import com.cub.project.domain.converter.DateConverter;
 import com.cub.project.domain.converter.RoleConverter;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "Participants")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
