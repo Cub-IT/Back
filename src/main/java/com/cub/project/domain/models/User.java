@@ -27,7 +27,7 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -37,8 +37,8 @@ public class User {
 //    private Set<UserRole> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Participant> participants;
+    transient private List<Participant> participants;
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Post> posts;
+    transient private List<Post> posts;
 }

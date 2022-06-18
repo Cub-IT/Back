@@ -33,6 +33,7 @@ public class UserController {
     public ResponseEntity<User> getUserDetails(@PathVariable long userId) {
         return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
     }
+
     @PreAuthorize("")
     @GetMapping("{userId}/groups")
     public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId) {
@@ -41,14 +42,14 @@ public class UserController {
     }
 
     @PreAuthorize("")
-    @PatchMapping(value = "{userId}/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping("{userId}/edit")
     public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId) {
         userService.updateUser(userId, user);
         return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
     }
 
-    //@PreAuthorize("")
-    @PostMapping(value = "new", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("")
+    @PostMapping("new")
     public ResponseEntity<?> newUser(@RequestBody @Valid UserDto user) {
         userService.createUser(user);
         log.debug("registered new user: " + user.getFirstName() + " " + user.getLastName());

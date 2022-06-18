@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class GroupService {
                 .title(groupDto.getTitle())
                 .description(groupDto.getDescription())
                 .code(groupDto.getCode())
-                .creationDate(groupDto.getCreationDate())
+                .creationDate(LocalDate.now())
                 .build();
         groupRepository.save(group);
     }

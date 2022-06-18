@@ -32,10 +32,10 @@ public class Group {
     private String code;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Participant> participants;
+    transient private List<Participant> participants;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Post> posts;
+    transient private List<Post> posts;
 
     @Column(name = "creation_date")
     @Convert(converter = DateConverter.class)

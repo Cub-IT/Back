@@ -41,6 +41,4 @@ public class Post {
 
     @ManyToOne
     private Group group;
-
-
 }
