@@ -1,5 +1,6 @@
 package com.cub.project.service;
 
+import com.cub.project.Constants;
 import com.cub.project.domain.dto.GroupDto;
 import com.cub.project.domain.models.Group;
 import com.cub.project.repository.GroupRepository;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final RandomStringGenerator codeGenerator;
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
@@ -21,10 +23,14 @@ public class GroupService {
     }
 
     public void createGroup(GroupDto groupDto) {
+        String code = codeGenerator.getString(Constants.codeLength);
+        while (!groupRepository.existByCode(code)) {
+            code = codeGenerator.getString(Constants.codeLength);
+        }
         Group group = Group.builder()
                 .title(groupDto.getTitle())
                 .description(groupDto.getDescription())
-                .code(groupDto.getCode())
+                .code(code)
                 .creationDate(LocalDate.now())
                 .build();
         groupRepository.save(group);
@@ -39,7 +45,7 @@ public class GroupService {
         Group group = getGroupById(groupDto.getId());
         group.setTitle(groupDto.getTitle());
         group.setDescription(groupDto.getDescription());
-        group.setCode(groupDto.getCode());
+        //group.setCode(groupDto.getCode());
         groupRepository.save(group);
     }
 
@@ -49,6 +55,7 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    //TODO
     public void removeParticipant(long groupId, long userId) {
         Group group = getGroupById(groupId);
         group.getParticipants().removeIf((user) -> user.getId() == userId);
