@@ -32,7 +32,7 @@ public class GroupService {
 
     public void createGroup(GroupDto groupDto, String authUserLogin) {
         String code = codeGenerator.getString(Constants.codeLength);
-        while (!groupRepository.existsByCode(code)) {
+        while (groupRepository.existsByCode(code)) {
             code = codeGenerator.getString(Constants.codeLength);
         }
         String[] colors = {"#161725", "3897832", "3320945", "5664378", "14228064", "#153498"};

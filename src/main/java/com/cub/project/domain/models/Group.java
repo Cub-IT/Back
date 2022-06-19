@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Groups")
+@Table(name = "`Groups`")
 @Data
 @Builder
 @NoArgsConstructor
@@ -29,7 +29,7 @@ public class Group {
     @Column(name="description")
     private String description;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "`code`", nullable = false)
     private String code;
 
     @Column(name="group_color")
