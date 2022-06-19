@@ -24,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/login", "/api/v1/user/new").permitAll()
+                .antMatchers("/api/v1/user/login", "/api/v1/user/new").permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
