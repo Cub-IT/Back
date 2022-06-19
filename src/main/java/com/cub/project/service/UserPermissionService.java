@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserPermissionService {
-    private UserService userService;
-    private GroupService groupService;
+    private final UserService userService;
+    private final GroupService groupService;
 
     public boolean isAuthenticated(long userId, String authUserLogin) {
         if (userService.getUserById(userId) == null) {
