@@ -1,10 +1,12 @@
 package com.cub.project.api.controllers;
 
+import com.cub.project.domain.dto.LoginDto;
 import com.cub.project.domain.dto.UserDto;
 import com.cub.project.domain.models.Group;
 import com.cub.project.domain.models.Participant;
 import com.cub.project.domain.models.User;
 import com.cub.project.service.SecurityService;
+import com.cub.project.service.UserPermissionService;
 import com.cub.project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,23 +30,34 @@ import java.util.stream.Collectors;
 public class UserController {
     private final SecurityService securityService;
     private final UserService userService;
+    private final UserPermissionService permissionService;
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody @Valid LoginDto data) {
+        securityService.login(data.getLogin(), data.getPassword());
+        log.debug("logged new user: " + data.getLogin());
+        return new ResponseEntity<>(userService.getUserByEmail(data.getLogin()), new HttpHeaders(), HttpStatus.OK);
+    }
 
     @PreAuthorize("")
     @GetMapping("{userId}")
-    public ResponseEntity<User> getUserDetails(@PathVariable long userId) {
-        return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
+    public ResponseEntity<User> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal User auth) {
+        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+            return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PreAuthorize("")
     @GetMapping("{userId}/groups")
-    public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId) {
+    public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal User auth) {
         return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
                 .map(Participant::getGroup).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
     }
 
     @PreAuthorize("")
     @PatchMapping("{userId}/edit")
-    public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId) {
+    public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal User auth) {
         userService.updateUser(userId, user);
         return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
     }
@@ -59,14 +73,14 @@ public class UserController {
 
     @PreAuthorize("")
     @DeleteMapping("{userId}/delete")
-    public ResponseEntity<?> deleteUser(@PathVariable long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable long userId, @AuthenticationPrincipal User auth) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("")
     @PatchMapping("{userId}/leave/{groupId}")
-    public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId) {
+    public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId, @AuthenticationPrincipal User auth) {
         userService.leaveGroup(userId, groupId);
         return ResponseEntity.ok().build();
     }
