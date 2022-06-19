@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import org.springframework.context.MessageSource;
@@ -49,7 +50,9 @@ public class UserService {
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
-                .password(passwordEncoder.encode(userDTO.getPassword())).build();
+                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .participants(new ArrayList<>())
+                .posts(new ArrayList<>()).build();
         userRepository.save(user);
     }
 

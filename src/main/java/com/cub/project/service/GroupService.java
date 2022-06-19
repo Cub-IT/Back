@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Random;
 
 @Log4j2
@@ -36,7 +37,8 @@ public class GroupService {
                 .code(code)
                 .creationDate(LocalDate.now())
                 .color(colors[rnd])
-                .build();
+                .participants(new ArrayList<>())
+                .posts(new ArrayList<>()).build();
         groupRepository.save(group);
     }
 
