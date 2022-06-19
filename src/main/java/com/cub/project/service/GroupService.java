@@ -35,7 +35,7 @@ public class GroupService {
         while (!groupRepository.existsByCode(code)) {
             code = codeGenerator.getString(Constants.codeLength);
         }
-        String[] colors = {"#161725", "3897832", "3320945", "5664378", "14228064", "#153498"};
+        String[] colors = {"#161725", "#3897832", "#3320945", "#5664378", "#14228064", "#153498"};
         int rnd = new Random().nextInt(colors.length);
         Group group = Group.builder()
                 .title(groupDto.getTitle())
