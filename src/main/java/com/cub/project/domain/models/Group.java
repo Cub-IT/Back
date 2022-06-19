@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,10 +36,10 @@ public class Group {
     private String color;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    transient private List<Participant> participants;
+    transient private List<Participant> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    transient private List<Post> posts;
+    transient private List<Post> posts = new ArrayList<>();
 
     @Column(name = "creation_date")
     @Convert(converter = DateConverter.class)

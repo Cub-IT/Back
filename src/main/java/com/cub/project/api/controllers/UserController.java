@@ -59,7 +59,7 @@ public class UserController {
     public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             userService.updateUser(userId, user);
-            return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }

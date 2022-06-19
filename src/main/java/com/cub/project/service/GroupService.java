@@ -3,7 +3,11 @@ package com.cub.project.service;
 import com.cub.project.Constants;
 import com.cub.project.domain.dto.GroupDto;
 import com.cub.project.domain.models.Group;
+import com.cub.project.domain.models.Participant;
+import com.cub.project.domain.models.Role;
 import com.cub.project.repository.GroupRepository;
+import com.cub.project.repository.ParticipantRepository;
+import com.cub.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -18,13 +22,15 @@ import java.util.Random;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final RandomStringGenerator codeGenerator;
+    private final ParticipantRepository participantRepository;
+    private final UserRepository userRepository;
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Invalid group id" + id));
     }
 
-    public void createGroup(GroupDto groupDto) {
+    public void createGroup(GroupDto groupDto, String authUserLogin) {
         String code = codeGenerator.getString(Constants.codeLength);
         while (!groupRepository.existsByCode(code)) {
             code = codeGenerator.getString(Constants.codeLength);
@@ -36,10 +42,14 @@ public class GroupService {
                 .description(groupDto.getDescription())
                 .code(code)
                 .creationDate(LocalDate.now())
-                .color(colors[rnd])
-                .participants(new ArrayList<>())
-                .posts(new ArrayList<>()).build();
+                .color(colors[rnd]).build();
+        Participant creator = Participant.builder()
+                .user(userRepository.findByEmail(authUserLogin))
+                .group(group)
+                .assertionDate(LocalDate.now())
+                .role(Role.OWNER).build();
         groupRepository.save(group);
+        participantRepository.save(creator);
     }
 
     public void deleteGroup(long id) {

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,8 +38,8 @@ public class User {
 //    private Set<UserRole> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    transient private List<Participant> participants;
+    transient private List<Participant> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    transient private List<Post> posts;
+    transient private List<Post> posts = new ArrayList<>();
 }

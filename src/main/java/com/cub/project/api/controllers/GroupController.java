@@ -34,7 +34,7 @@ public class GroupController {
 
     @PostMapping("new")
     public ResponseEntity<?> createGroup(@RequestBody GroupDto group, @AuthenticationPrincipal UserDetails auth) {
-        groupService.createGroup(group);
+        groupService.createGroup(group, auth.getUsername());
         return ResponseEntity.ok().build();
     }
 

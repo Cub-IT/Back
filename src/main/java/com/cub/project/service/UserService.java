@@ -50,9 +50,7 @@ public class UserService {
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .participants(new ArrayList<>())
-                .posts(new ArrayList<>()).build();
+                .password(passwordEncoder.encode(userDTO.getPassword())).build();
         userRepository.save(user);
     }
 
