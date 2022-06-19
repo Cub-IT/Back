@@ -37,9 +37,17 @@ public class User {
 //    @ManyToMany
 //    private Set<UserRole> roles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     transient private List<Participant> participants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.REMOVE, orphanRemoval = true)
     transient private List<Post> posts = new ArrayList<>();
+
+    public void addParticipant(Participant participant) {
+        participants.add(participant);
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+    }
 }

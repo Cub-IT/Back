@@ -23,8 +23,7 @@ public class Participant {
     @Column(name = "participant_id")
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column(name = "role_id", nullable = false)
@@ -35,7 +34,6 @@ public class Participant {
     @Convert(converter = DateConverter.class)
     private LocalDate assertionDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "group_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Group group;
 }

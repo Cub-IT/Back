@@ -5,6 +5,7 @@ import com.cub.project.domain.dto.GroupDto;
 import com.cub.project.domain.models.Group;
 import com.cub.project.domain.models.Participant;
 import com.cub.project.domain.models.Role;
+import com.cub.project.domain.models.User;
 import com.cub.project.repository.GroupRepository;
 import com.cub.project.repository.ParticipantRepository;
 import com.cub.project.repository.UserRepository;
@@ -22,8 +23,8 @@ import java.util.Random;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final RandomStringGenerator codeGenerator;
-    private final ParticipantRepository participantRepository;
     private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
@@ -37,19 +38,23 @@ public class GroupService {
         }
         String[] colors = {"#161725", "#3897832", "#3320945", "#5664378", "#14228064", "#153498"};
         int rnd = new Random().nextInt(colors.length);
+        User creator = userRepository.findByEmail(authUserLogin);
         Group group = Group.builder()
                 .title(groupDto.getTitle())
                 .description(groupDto.getDescription())
                 .code(code)
                 .creationDate(LocalDate.now())
                 .color(colors[rnd]).build();
-        Participant creator = Participant.builder()
-                .user(userRepository.findByEmail(authUserLogin))
+        Participant participant = Participant.builder()
+                .user(creator)
                 .group(group)
                 .assertionDate(LocalDate.now())
                 .role(Role.OWNER).build();
+        group.addParticipant(participant);
+        creator.addParticipant(participant);
         groupRepository.save(group);
-        participantRepository.save(creator);
+        userRepository.save(creator);
+        participantRepository.save(participant);
     }
 
     public void deleteGroup(long id) {
@@ -71,7 +76,6 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    //TODO
     public void removeParticipant(long groupId, long userId) {
         Group group = getGroupById(groupId);
         group.getParticipants().removeIf((user) -> user.getId() == userId);

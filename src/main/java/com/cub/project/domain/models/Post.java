@@ -36,11 +36,9 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "group_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Group group;
 }
