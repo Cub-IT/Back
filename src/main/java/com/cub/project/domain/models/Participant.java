@@ -24,7 +24,7 @@ public class Participant {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(referencedColumnName = "user_id", nullable = false)
     private User user;
 
     @Column(name = "role_id", nullable = false)
@@ -36,6 +36,6 @@ public class Participant {
     private LocalDate assertionDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(referencedColumnName = "group_id", nullable = false)
     private Group group;
 }
