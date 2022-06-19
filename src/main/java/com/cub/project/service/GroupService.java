@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 @Log4j2
 @Service
@@ -21,11 +22,14 @@ public class GroupService {
     }
 
     public void createGroup(GroupDto groupDto) {
+        String colors [] = {"#161725","3897832", "3320945","5664378","14228064","#153498" };
+        int rnd=new Random().nextInt(colors.length);
         Group group = Group.builder()
                 .title(groupDto.getTitle())
                 .description(groupDto.getDescription())
                 .code(groupDto.getCode())
                 .creationDate(LocalDate.now())
+                .color(colors[rnd])
                 .build();
         groupRepository.save(group);
     }
