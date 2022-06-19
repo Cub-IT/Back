@@ -39,10 +39,10 @@ public class Group {
     @Convert(converter = DateConverter.class)
     private LocalDate creationDate;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     transient private List<Participant> participants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     transient private List<Post> posts = new ArrayList<>();
 
     public void addParticipant(Participant participant) {
