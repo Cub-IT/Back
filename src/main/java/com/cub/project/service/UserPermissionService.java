@@ -12,7 +12,19 @@ public class UserPermissionService {
         return false;
     }
 
-    public boolean isMember(long userId, long groupId, String authUserLogin) {
+    public boolean userIsMember(long userId, long groupId, String authUserLogin) {
+        if (isAuthenticated(userId, authUserLogin)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isMember(long groupId, String authUserLogin) {
+        return false;
+    }
+
+    public boolean isAdmin(long groupId, String authUserLogin) {
         return false;
     }
 }

@@ -1,5 +1,6 @@
 package com.cub.project.api.controllers;
 
+import com.cub.project.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,29 +9,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/task/")
 @RequiredArgsConstructor
-public class TaskController {
+public class PostController {
+    private final PostService postService;
 
-    @PreAuthorize("")
     @GetMapping("{taskId}")
-    public ResponseEntity<?> showTask() {
+    public ResponseEntity<?> showPost() {
         return null;
     }
 
-    @PreAuthorize("")
     @PostMapping("new")
-    public ResponseEntity<?> createTask() {
+    public ResponseEntity<?> createPost() {
         return null;
     }
 
-    @PreAuthorize("")
     @PatchMapping("{taskId}/edit")
-    public ResponseEntity<?> editTask() {
+    public ResponseEntity<?> editPost() {
         return null;
     }
 
-    @PreAuthorize("")
     @DeleteMapping("{taskId}/delete")
-    public ResponseEntity<?> deleteTask() {
+    public ResponseEntity<?> deletePost() {
         return null;
     }
 }

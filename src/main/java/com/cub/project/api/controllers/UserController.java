@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,7 +37,6 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByEmail(data.getLogin()), new HttpHeaders(), HttpStatus.OK);
     }
 
-    @PreAuthorize("")
     @GetMapping("{userId}")
     public ResponseEntity<User> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal User auth) {
         if (permissionService.isAuthenticated(userId, auth.getEmail())) {
@@ -48,21 +45,24 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PreAuthorize("")
     @GetMapping("{userId}/groups")
     public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal User auth) {
-        return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
-                .map(Participant::getGroup).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
+        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+            return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
+                    .map(Participant::getGroup).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PreAuthorize("")
     @PatchMapping("{userId}/edit")
     public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal User auth) {
-        userService.updateUser(userId, user);
-        return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
+        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+            userService.updateUser(userId, user);
+            return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PreAuthorize("")
     @PostMapping("new")
     public ResponseEntity<?> newUser(@RequestBody @Valid UserDto user) {
         userService.createUser(user);
@@ -71,17 +71,21 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
     }
 
-    @PreAuthorize("")
     @DeleteMapping("{userId}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable long userId, @AuthenticationPrincipal User auth) {
-        userService.deleteUser(userId);
-        return ResponseEntity.ok().build();
+        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().build();
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PreAuthorize("")
     @PatchMapping("{userId}/leave/{groupId}")
     public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId, @AuthenticationPrincipal User auth) {
-        userService.leaveGroup(userId, groupId);
-        return ResponseEntity.ok().build();
+        if (permissionService.userIsMember(userId, groupId, auth.getEmail())) {
+            userService.leaveGroup(userId, groupId);
+            return ResponseEntity.ok().build();
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }
