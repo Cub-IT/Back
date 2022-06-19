@@ -31,6 +31,9 @@ public class Group {
     @Column(name = "code", nullable = false)
     private String code;
 
+    @Column(name="group_color")
+    private String color;
+
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     transient private List<Participant> participants;
 
