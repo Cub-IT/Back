@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,16 +39,16 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<User> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal User auth) {
-        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+    public ResponseEntity<User> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
+        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("{userId}/groups")
-    public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal User auth) {
-        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+    public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
+        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
                     .map(Participant::getGroup).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
         }
@@ -55,8 +56,8 @@ public class UserController {
     }
 
     @PatchMapping("{userId}/edit")
-    public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal User auth) {
-        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+    public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
+        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             userService.updateUser(userId, user);
             return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
         }
@@ -72,8 +73,8 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}/delete")
-    public ResponseEntity<?> deleteUser(@PathVariable long userId, @AuthenticationPrincipal User auth) {
-        if (permissionService.isAuthenticated(userId, auth.getEmail())) {
+    public ResponseEntity<?> deleteUser(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
+        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             userService.deleteUser(userId);
             return ResponseEntity.ok().build();
         }
@@ -81,8 +82,8 @@ public class UserController {
     }
 
     @PatchMapping("{userId}/leave/{groupId}")
-    public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId, @AuthenticationPrincipal User auth) {
-        if (permissionService.userIsMember(userId, groupId, auth.getEmail())) {
+    public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
+        if (permissionService.userIsMember(userId, groupId, auth.getUsername())) {
             userService.leaveGroup(userId, groupId);
             return ResponseEntity.ok().build();
         }
