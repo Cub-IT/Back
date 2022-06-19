@@ -24,7 +24,6 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final RandomStringGenerator codeGenerator;
     private final UserRepository userRepository;
-    private final ParticipantRepository participantRepository;
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
@@ -54,7 +53,6 @@ public class GroupService {
         creator.addParticipant(participant);
         groupRepository.save(group);
         userRepository.save(creator);
-        participantRepository.save(participant);
     }
 
     public void deleteGroup(long id) {
