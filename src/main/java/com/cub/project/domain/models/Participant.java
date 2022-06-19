@@ -24,6 +24,7 @@ public class Participant {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     @Column(name = "role_id", nullable = false)
@@ -35,5 +36,6 @@ public class Participant {
     private LocalDate assertionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
     private Group group;
 }

@@ -37,8 +37,10 @@ public class Post {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
     private Group group;
 }
