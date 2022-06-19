@@ -1,6 +1,7 @@
 package com.cub.project.service;
 
 import com.cub.project.domain.dto.UserDto;
+import com.cub.project.domain.models.Group;
 import com.cub.project.domain.models.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -77,6 +78,8 @@ public class UserService {
     }
 
     public void leaveGroup(long userId, long groupId) {
-
+        User user = getUserById(userId);
+        user.getParticipants().removeIf((group) -> group.getId() == groupId);
+        userRepository.save(user);
     }
 }

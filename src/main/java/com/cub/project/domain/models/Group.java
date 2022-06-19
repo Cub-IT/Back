@@ -46,10 +46,16 @@ public class Group {
     transient private List<Post> posts = new ArrayList<>();
 
     public void addParticipant(Participant participant) {
+        if (participants == null) {
+            participants = new ArrayList<>();
+        }
         participants.add(participant);
     }
 
     public void addPost(Post post) {
+        if (posts == null) {
+            posts = new ArrayList<>();
+        }
         posts.add(post);
     }
 }
