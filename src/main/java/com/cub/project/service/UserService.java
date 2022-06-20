@@ -5,17 +5,15 @@ import com.cub.project.domain.models.Group;
 import com.cub.project.domain.models.Participant;
 import com.cub.project.domain.models.Role;
 import com.cub.project.domain.models.User;
+import com.cub.project.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Objects;
 
 import org.springframework.context.MessageSource;
 import com.cub.project.repository.UserRepository;
@@ -25,7 +23,7 @@ import com.cub.project.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final GroupService groupService;
+    private final GroupRepository groupRepository;
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
 
@@ -94,7 +92,7 @@ public class UserService {
 
     public void joinGroup(long userId, String code) {
         User user = getUserById(userId);
-        Group group = groupService.getGroupByCode(code);
+        Group group = groupRepository.findByCode(code);
 
         Participant participant = Participant.builder()
                 .user(user)
@@ -106,10 +104,6 @@ public class UserService {
         group.addParticipant(participant);
 
         userRepository.save(user);
-        groupService.save(group);
-    }
-
-    public void save(User user) {
-        userRepository.save(user);
+        groupRepository.save(group);
     }
 }
