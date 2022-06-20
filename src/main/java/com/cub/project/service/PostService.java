@@ -25,7 +25,6 @@ public class PostService {
         Post post = Post.builder()
                 .creationDate(LocalDate.now())
                 .editDate(LocalDate.now())
-                .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .build();
         postRepository.save(post);
@@ -38,7 +37,6 @@ public class PostService {
 
     public void updatePost(PostDto postDto) {
         Post post = getPostById(postDto.getId());
-        post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
         post.setEditDate(LocalDate.now());
     }

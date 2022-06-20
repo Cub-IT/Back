@@ -33,9 +33,6 @@ public class Post {
     @Column(name="description")
     private String description;
 
-    @Column(name = "title")
-    private String title;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User creator;

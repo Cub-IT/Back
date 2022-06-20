@@ -45,6 +45,10 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
+    public Participant getOwner() {
+        return participants.stream().filter(p -> p.getRole() == Role.OWNER).findAny().orElseThrow();
+    }
+
     public void addParticipant(Participant participant) {
         if (participants == null) {
             participants = new ArrayList<>();

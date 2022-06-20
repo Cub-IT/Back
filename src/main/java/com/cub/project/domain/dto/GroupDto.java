@@ -1,6 +1,8 @@
 package com.cub.project.domain.dto;
 
 import com.cub.project.domain.models.Group;
+import com.cub.project.domain.models.Participant;
+import com.cub.project.domain.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +18,11 @@ public class GroupDto {
     private String description;
     private String code;
     private LocalDate creationDate;
+    private String ownerFirstName;
+    private String ownerlastName;
 
     public static GroupDto convert(Group group) {
-        return new GroupDto(group.getId(), group.getTitle(), group.getDescription(), group.getCode(), group.getCreationDate());
+        User owner = group.getOwner().getUser();
+        return new GroupDto(group.getId(), group.getTitle(), group.getDescription(), group.getCode(), group.getCreationDate(), owner.getFirstName(), owner.getLastName());
     }
 }

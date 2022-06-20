@@ -33,6 +33,7 @@ public class PostController {
     @PostMapping("new/group/{groupId}")
     public ResponseEntity<?> createPost(@PathVariable long groupId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToCreate(groupId, auth.getUsername())) {
+            postService.createPost(data);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -41,6 +42,7 @@ public class PostController {
     @PatchMapping("{postId}/edit")
     public ResponseEntity<?> editPost(@PathVariable long postId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToManage(postId, auth.getUsername())) {
+            postService.updatePost(data);
             return new ResponseEntity<>(postService.getPostById(postId), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
