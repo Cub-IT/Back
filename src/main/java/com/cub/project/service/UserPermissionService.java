@@ -1,8 +1,12 @@
 package com.cub.project.service;
 
-import com.cub.project.domain.models.Group;
+import com.cub.project.domain.models.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +35,20 @@ public class UserPermissionService {
     public boolean isAdmin(long groupId, String authUserLogin) {
         Group group = groupService.getGroupById(groupId);
         return group != null && group.getParticipants().stream().anyMatch(p -> p.getUser().getEmail().equals(authUserLogin));
+    }
+
+    public boolean isAllowedToShow(long postId, String authUserLogin) {
+        return userService.getUserByEmail(authUserLogin).getParticipants().stream()
+                .map(Participant::getGroup).anyMatch(g -> g.getPosts().stream().anyMatch(p -> p.getId() == postId));
+    }
+
+    public boolean isAllowedToManage(long postId, String authUserLogin) {
+        return userService.getUserByEmail(authUserLogin).getPosts().stream().anyMatch(p -> p.getId() == postId);
+    }
+
+    public boolean isAllowedToCreate(long groupId, String authUserLogin) {
+        return groupService.getGroupById(groupId).getParticipants().stream()
+                .anyMatch(p -> p.getUser() == userService.getUserByEmail(authUserLogin)
+                        && p.getRole() == Role.ADMIN || p.getRole() == Role.OWNER);
     }
 }

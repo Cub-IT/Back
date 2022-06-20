@@ -3,9 +3,12 @@ package com.cub.project.service;
 import com.cub.project.domain.dto.PostDto;
 import com.cub.project.domain.models.Post;
 import com.cub.project.repository.PostRepository;
+import com.cub.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Log4j2
 @Service
@@ -20,8 +23,8 @@ public class PostService {
 
     public void createPost(PostDto postDto) {
         Post post = Post.builder()
-                .creationDate(postDto.getCreationDate())
-                .editDate(postDto.getEditDate())
+                .creationDate(LocalDate.now())
+                .editDate(LocalDate.now())
                 .title(postDto.getTitle())
                 .description(postDto.getDescription())
                 .build();
@@ -37,6 +40,6 @@ public class PostService {
         Post post = getPostById(postDto.getId());
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
-        post.setEditDate(postDto.getEditDate());
+        post.setEditDate(LocalDate.now());
     }
 }
