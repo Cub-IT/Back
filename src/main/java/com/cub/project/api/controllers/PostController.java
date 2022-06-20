@@ -51,6 +51,7 @@ public class PostController {
     @DeleteMapping("{postId}/delete")
     public ResponseEntity<?> deletePost(@PathVariable long postId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToManage(postId, auth.getUsername())) {
+            postService.deletePost(postId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);

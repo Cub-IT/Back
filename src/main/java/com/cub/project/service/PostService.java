@@ -20,7 +20,7 @@ public class PostService {
     private final GroupRepository groupRepository;
 
     public Post getPostById(long id) {
-        return postRepository.findById((int) id).orElseThrow(() ->
+        return postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Invalid Post id" + id));
     }
 
