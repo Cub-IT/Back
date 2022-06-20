@@ -42,6 +42,7 @@ public class PostController {
     @PatchMapping("{postId}/edit")
     public ResponseEntity<?> editPost(@PathVariable long postId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToManage(postId, auth.getUsername())) {
+            data.setId(postId);
             postService.updatePost(data);
             return new ResponseEntity<>(PostDto.convert(postService.getPostById(postId)), new HttpHeaders(), HttpStatus.OK);
         }

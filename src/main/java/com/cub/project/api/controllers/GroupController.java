@@ -68,6 +68,7 @@ public class GroupController {
     @PatchMapping("{groupId}/edit")
     public ResponseEntity<?> editGroup(@PathVariable long groupId, @RequestBody GroupDto group, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAdmin(groupId, auth.getUsername())) {
+            group.setId(groupId);
             groupService.updateGroup(group);
             return new ResponseEntity<>(GroupDto.convert(groupService.getGroupById(groupId)), new HttpHeaders(), HttpStatus.OK);
         }
