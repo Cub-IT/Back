@@ -37,6 +37,9 @@ public class User {
 //    @ManyToMany
 //    private Set<UserRole> roles;
 
+    @Column(name = "user_color", nullable = false)
+    private String color;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();
 

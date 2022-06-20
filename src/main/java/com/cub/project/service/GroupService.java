@@ -8,14 +8,11 @@ import com.cub.project.domain.models.Role;
 import com.cub.project.domain.models.User;
 import com.cub.project.repository.GroupRepository;
 import com.cub.project.repository.ParticipantRepository;
-import com.cub.project.repository.PostRepository;
-import com.cub.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Random;
 
 @Log4j2
@@ -24,12 +21,20 @@ import java.util.Random;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final RandomStringGenerator codeGenerator;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ParticipantRepository participantRepository;
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Invalid group id" + id));
+    }
+
+    public Group getGroupByCode(String code) {
+        Group group = groupRepository.findByCode(code);
+        if (group == null) {
+            throw new IllegalArgumentException("Invalid group code" + code);
+        }
+        return groupRepository.findByCode(code);
     }
 
     public void createGroup(GroupDto groupDto, String authUserLogin) {
@@ -39,7 +44,7 @@ public class GroupService {
         }
         String[] colors = {"#161725", "#3897832", "#3320945", "#5664378", "#14228064", "#153498"};
         int rnd = new Random().nextInt(colors.length);
-        User creator = userRepository.findByEmail(authUserLogin);
+        User creator = userService.getUserByEmail(authUserLogin);
         Group group = Group.builder()
                 .title(groupDto.getTitle())
                 .description(groupDto.getDescription())
@@ -54,8 +59,8 @@ public class GroupService {
         group.addParticipant(participant);
         creator.addParticipant(participant);
         groupRepository.save(group);
-        userRepository.save(creator);
-        participantRepository.save(participant);
+        userService.save(creator);
+        //participantRepository.save(participant);
     }
 
     public void deleteGroup(long id) {
@@ -80,6 +85,10 @@ public class GroupService {
     public void removeParticipant(long groupId, long userId) {
         Group group = getGroupById(groupId);
         group.getParticipants().removeIf((user) -> user.getId() == userId);
+        groupRepository.save(group);
+    }
+
+    public void save(Group group) {
         groupRepository.save(group);
     }
 }

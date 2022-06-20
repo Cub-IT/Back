@@ -14,8 +14,9 @@ public class UserDto {
     private String lastName;
     private String email;
     private String password;
+    private String color;
 
     public static UserDto convert(User user) {
-        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
+        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword(), user.getColor());
     }
 }

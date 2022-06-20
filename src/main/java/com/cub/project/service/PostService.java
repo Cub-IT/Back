@@ -2,9 +2,7 @@ package com.cub.project.service;
 
 import com.cub.project.domain.dto.PostDto;
 import com.cub.project.domain.models.Post;
-import com.cub.project.repository.GroupRepository;
 import com.cub.project.repository.PostRepository;
-import com.cub.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -16,8 +14,8 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
+    private final UserService userService;
+    private final GroupService groupService;
 
     public Post getPostById(long id) {
         return postRepository.findById(id).orElseThrow(() ->
@@ -29,8 +27,8 @@ public class PostService {
                 .creationDate(LocalDate.now())
                 .editDate(LocalDate.now())
                 .description(postDto.getDescription())
-                .creator(userRepository.findByEmail(authUserLogin))
-                .group(groupRepository.getById(groupId)).build();
+                .creator(userService.getUserByEmail(authUserLogin))
+                .group(groupService.getGroupById(groupId)).build();
         postRepository.save(post);
     }
 
