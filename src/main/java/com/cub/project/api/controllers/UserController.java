@@ -93,7 +93,7 @@ public class UserController {
 
     @PatchMapping("{userId}/join/{code}")
     public ResponseEntity<?> joinGroup(@PathVariable long userId, @PathVariable String code, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
+        if (permissionService.isAuthenticated(userId, auth.getUsername()) && permissionService.isMember(code, auth.getUsername())) {
             userService.joinGroup(userId, code);
             return ResponseEntity.ok().build();
         }

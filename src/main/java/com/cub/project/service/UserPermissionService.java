@@ -25,6 +25,10 @@ public class UserPermissionService {
         return userService.getUserByEmail(authUserLogin).getParticipants().stream().anyMatch(p -> p.getGroup().getId() == groupId);
     }
 
+    public boolean isMember(String code, String authUserLogin) {
+        return userService.getUserByEmail(authUserLogin).getGroups().stream().anyMatch(g -> g.getCode().equals(code));
+    }
+
     public boolean userIsMember(long userId, long groupId, String authUserLogin) {
         if (isAuthenticated(userId, authUserLogin)) {
             return isMember(groupId, authUserLogin);

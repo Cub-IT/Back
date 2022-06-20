@@ -105,11 +105,6 @@ public class UserService {
                 .assertionDate(LocalDate.now())
                 .role(Role.MEMBER).build();
 
-        user.addParticipant(participant);
-        group.addParticipant(participant);
-
         participantRepository.save(participant);
-        //userRepository.save(user);
-        //groupRepository.save(group);
     }
 }
