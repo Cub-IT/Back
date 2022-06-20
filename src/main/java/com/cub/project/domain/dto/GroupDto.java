@@ -20,9 +20,11 @@ public class GroupDto {
     private LocalDate creationDate;
     private String ownerFirstName;
     private String ownerLastName;
+    private String color;
+    private String ownerColor;
 
     public static GroupDto convert(Group group) {
         User owner = group.getOwner().getUser();
-        return new GroupDto(group.getId(), group.getTitle(), group.getDescription(), group.getCode(), group.getCreationDate(), owner.getFirstName(), owner.getLastName());
+        return new GroupDto(group.getId(), group.getTitle(), group.getDescription(), group.getCode(), group.getCreationDate(), owner.getFirstName(), owner.getLastName(), group.getColor(), owner.getColor());
     }
 }
