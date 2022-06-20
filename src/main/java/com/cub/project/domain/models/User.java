@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -58,5 +59,9 @@ public class User {
             posts = new ArrayList<>();
         }
         posts.add(post);
+    }
+
+    public List<Group> getGroups() {
+        return participants.stream().map(Participant::getGroup).collect(Collectors.toList());
     }
 }

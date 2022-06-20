@@ -89,7 +89,7 @@ public class UserService {
 
     public void leaveGroup(long userId, long groupId) {
         User user = getUserById(userId);
-        user.getParticipants().removeIf((group) -> group.getId() == groupId);
+        user.getGroups().removeIf((group) -> group.getId() == groupId);
         userRepository.save(user);
     }
 

@@ -64,9 +64,10 @@ public class GroupService {
         //participantRepository.save(participant);
     }
 
-    public void deleteGroup(long id) {
-        Group group = getGroupById(id);
-        groupRepository.delete(group);
+    public void deleteGroup(long id, String authUserLogin) {
+        User user = userRepository.findByEmail(authUserLogin);
+        user.getGroups().removeIf(g -> g.getId() == id);
+        userRepository.save(user);
     }
 
     public void updateGroup(GroupDto groupDto) {
