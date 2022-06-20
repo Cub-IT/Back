@@ -8,6 +8,7 @@ import com.cub.project.domain.models.Role;
 import com.cub.project.domain.models.User;
 import com.cub.project.repository.GroupRepository;
 import com.cub.project.repository.ParticipantRepository;
+import com.cub.project.repository.PostRepository;
 import com.cub.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +25,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final RandomStringGenerator codeGenerator;
     private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
 
     public Group getGroupById(long id) {
         return groupRepository.findById(id).orElseThrow(() ->
@@ -53,6 +55,7 @@ public class GroupService {
         creator.addParticipant(participant);
         groupRepository.save(group);
         userRepository.save(creator);
+        participantRepository.save(participant);
     }
 
     public void deleteGroup(long id) {
