@@ -33,7 +33,7 @@ public class PostController {
     @PostMapping("new/group/{groupId}")
     public ResponseEntity<?> createPost(@PathVariable long groupId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToCreate(groupId, auth.getUsername())) {
-            postService.createPost(data);
+            postService.createPost(data, groupId, auth.getUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
