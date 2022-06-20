@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/task/")
@@ -23,25 +24,25 @@ public class PostController {
     private final UserPermissionService permissionService;
 
     @GetMapping("{postId}")
-    public ResponseEntity<?> showPost(@PathVariable long postId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAllowedToShow(postId, auth.getUsername())) {
+    public ResponseEntity<?> showPost(@PathVariable long postId, Principal auth) {
+        if (permissionService.isAllowedToShow(postId, auth.getName())) {
             return new ResponseEntity<>(PostDto.convert(postService.getPostById(postId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("new/group/{groupId}")
-    public ResponseEntity<?> createPost(@PathVariable long groupId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAllowedToCreate(groupId, auth.getUsername())) {
-            postService.createPost(data, groupId, auth.getUsername());
+    public ResponseEntity<?> createPost(@PathVariable long groupId, @RequestBody @Valid PostDto data, Principal auth) {
+        if (permissionService.isAllowedToCreate(groupId, auth.getName())) {
+            postService.createPost(data, groupId, auth.getName());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PatchMapping("{postId}/edit")
-    public ResponseEntity<?> editPost(@PathVariable long postId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAllowedToManage(postId, auth.getUsername())) {
+    public ResponseEntity<?> editPost(@PathVariable long postId, @RequestBody @Valid PostDto data, Principal auth) {
+        if (permissionService.isAllowedToManage(postId, auth.getName())) {
             data.setId(postId);
             postService.updatePost(data);
             return new ResponseEntity<>(PostDto.convert(postService.getPostById(postId)), new HttpHeaders(), HttpStatus.OK);
@@ -50,8 +51,8 @@ public class PostController {
     }
 
     @DeleteMapping("{postId}/delete")
-    public ResponseEntity<?> deletePost(@PathVariable long postId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAllowedToManage(postId, auth.getUsername())) {
+    public ResponseEntity<?> deletePost(@PathVariable long postId, Principal auth) {
+        if (permissionService.isAllowedToManage(postId, auth.getName())) {
             postService.deletePost(postId);
             return new ResponseEntity<>(HttpStatus.OK);
         }

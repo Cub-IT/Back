@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Collection;
 
 @RestController
@@ -26,30 +27,30 @@ public class GroupController {
     private final UserPermissionService permissionService;
 
     @GetMapping("{groupId}")
-    public ResponseEntity<?> getGroupData(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isMember(groupId, auth.getUsername())) {
+    public ResponseEntity<?> getGroupData(@PathVariable long groupId, Principal auth) {
+        if (permissionService.isMember(groupId, auth.getName())) {
             return new ResponseEntity<>(GroupDto.convert(groupService.getGroupById(groupId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("new")
-    public ResponseEntity<?> createGroup(@RequestBody GroupDto group, @AuthenticationPrincipal UserDetails auth) {
-        groupService.createGroup(group, auth.getUsername());
+    public ResponseEntity<?> createGroup(@RequestBody GroupDto group, Principal auth) {
+        groupService.createGroup(group, auth.getName());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{groupId}/posts")
-    public ResponseEntity<?> getPosts(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isMember(groupId, auth.getUsername())) {
+    public ResponseEntity<?> getPosts(@PathVariable long groupId, Principal auth) {
+        if (permissionService.isMember(groupId, auth.getName())) {
             return new ResponseEntity<>(groupService.getGroupById(groupId).getPosts().stream().map(PostDto::convert), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PatchMapping("{groupId}/remove/participant/{participantId}")
-    public ResponseEntity<?> removeParticipant(@PathVariable long groupId, @PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAdmin(groupId, auth.getUsername())) {
+    public ResponseEntity<?> removeParticipant(@PathVariable long groupId, @PathVariable long userId, Principal auth) {
+        if (permissionService.isAdmin(groupId, auth.getName())) {
             groupService.removeParticipant(groupId, userId);
             return ResponseEntity.ok().build();
         }
@@ -57,8 +58,8 @@ public class GroupController {
     }
 
     @PatchMapping("{groupId}/remove/post/{postId}")
-    public ResponseEntity<?> removePost(@PathVariable long groupId, @PathVariable long postId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAdmin(groupId, auth.getUsername())) {
+    public ResponseEntity<?> removePost(@PathVariable long groupId, @PathVariable long postId, Principal auth) {
+        if (permissionService.isAdmin(groupId, auth.getName())) {
             groupService.removePost(groupId, postId);
             return ResponseEntity.ok().build();
         }
@@ -66,8 +67,8 @@ public class GroupController {
     }
 
     @PatchMapping("{groupId}/edit")
-    public ResponseEntity<?> editGroup(@PathVariable long groupId, @RequestBody GroupDto group, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAdmin(groupId, auth.getUsername())) {
+    public ResponseEntity<?> editGroup(@PathVariable long groupId, @RequestBody GroupDto group, Principal auth) {
+        if (permissionService.isAdmin(groupId, auth.getName())) {
             group.setId(groupId);
             groupService.updateGroup(group);
             return new ResponseEntity<>(GroupDto.convert(groupService.getGroupById(groupId)), new HttpHeaders(), HttpStatus.OK);
@@ -76,9 +77,9 @@ public class GroupController {
     }
 
     @DeleteMapping("{groupId}/delete")
-    public ResponseEntity<?> deleteGroup(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAdmin(groupId, auth.getUsername())) {
-            groupService.deleteGroup(groupId, auth.getUsername());
+    public ResponseEntity<?> deleteGroup(@PathVariable long groupId, Principal auth) {
+        if (permissionService.isAdmin(groupId, auth.getName())) {
+            groupService.deleteGroup(groupId, auth.getName());
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);

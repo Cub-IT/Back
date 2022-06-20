@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -40,16 +41,16 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<?> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
+    public ResponseEntity<?> getUserDetails(@PathVariable long userId, Principal auth) {
+        if (permissionService.isAuthenticated(userId, auth.getName())) {
             return new ResponseEntity<>(UserDto.convert(userService.getUserById(userId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("{userId}/groups")
-    public ResponseEntity<?> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
+    public ResponseEntity<?> getUsersGroups(@PathVariable long userId, Principal auth) {
+        if (permissionService.isAuthenticated(userId, auth.getName())) {
             return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
                     .map(p -> GroupDto.convert(p.getGroup())).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
         }
@@ -57,8 +58,8 @@ public class UserController {
     }
 
     @PatchMapping("{userId}/edit")
-    public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
+    public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, Principal auth) {
+        if (permissionService.isAuthenticated(userId, auth.getName())) {
             userService.updateUser(userId, user);
             return new ResponseEntity<>(UserDto.convert(userService.getUserById(userId)), new HttpHeaders(), HttpStatus.OK);
         }
@@ -74,8 +75,8 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}/delete")
-    public ResponseEntity<?> deleteUser(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAuthenticated(userId, auth.getUsername())) {
+    public ResponseEntity<?> deleteUser(@PathVariable long userId, Principal auth) {
+        if (permissionService.isAuthenticated(userId, auth.getName())) {
             userService.deleteUser(userId);
             return ResponseEntity.ok().build();
         }
@@ -83,8 +84,8 @@ public class UserController {
     }
 
     @PatchMapping("{userId}/leave/{groupId}")
-    public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.userIsMember(userId, groupId, auth.getUsername())) {
+    public ResponseEntity<?> leaveGroup(@PathVariable long userId, @PathVariable long groupId, Principal auth) {
+        if (permissionService.userIsMember(userId, groupId, auth.getName())) {
             userService.leaveGroup(userId, groupId);
             return ResponseEntity.ok().build();
         }
@@ -92,8 +93,8 @@ public class UserController {
     }
 
     @PatchMapping("{userId}/join/{code}")
-    public ResponseEntity<?> joinGroup(@PathVariable long userId, @PathVariable String code, @AuthenticationPrincipal UserDetails auth) {
-        if (permissionService.isAuthenticated(userId, auth.getUsername()) && !permissionService.isMember(code, auth.getUsername())) {
+    public ResponseEntity<?> joinGroup(@PathVariable long userId, @PathVariable String code, Principal auth) {
+        if (permissionService.isAuthenticated(userId, auth.getName()) && !permissionService.isMember(code, auth.getName())) {
             userService.joinGroup(userId, code);
             return ResponseEntity.ok().build();
         }

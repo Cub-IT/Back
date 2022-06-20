@@ -22,9 +22,10 @@ public class GroupDto {
     private String ownerLastName;
     private String color;
     private String ownerColor;
+    private long ownerId;
 
     public static GroupDto convert(Group group) {
         User owner = group.getOwner().getUser();
-        return new GroupDto(group.getId(), group.getTitle(), group.getDescription(), group.getCode(), group.getCreationDate(), owner.getFirstName(), owner.getLastName(), group.getColor(), owner.getColor());
+        return new GroupDto(group.getId(), group.getTitle(), group.getDescription(), group.getCode(), group.getCreationDate(), owner.getFirstName(), owner.getLastName(), group.getColor(), owner.getColor(), owner.getId());
     }
 }
