@@ -1,5 +1,6 @@
 package com.cub.project.api.controllers;
 
+import com.cub.project.domain.dto.GroupDto;
 import com.cub.project.domain.dto.LoginDto;
 import com.cub.project.domain.dto.UserDto;
 import com.cub.project.domain.models.Group;
@@ -32,25 +33,25 @@ public class UserController {
     private final UserPermissionService permissionService;
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid LoginDto data) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginDto data) {
         securityService.login(data.getLogin(), data.getPassword());
         log.debug("logged new user: " + data.getLogin());
-        return new ResponseEntity<>(userService.getUserByEmail(data.getLogin()), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(UserDto.convert(userService.getUserByEmail(data.getLogin())), new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<User> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
+    public ResponseEntity<?> getUserDetails(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAuthenticated(userId, auth.getUsername())) {
-            return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(UserDto.convert(userService.getUserById(userId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("{userId}/groups")
-    public ResponseEntity<Collection<Group>> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
+    public ResponseEntity<?> getUsersGroups(@PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             return new ResponseEntity<>(userService.getUserById(userId).getParticipants().stream()
-                    .map(Participant::getGroup).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
+                    .map(p -> GroupDto.convert(p.getGroup())).collect(Collectors.toList()), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -59,7 +60,7 @@ public class UserController {
     public ResponseEntity<?> editUser(@RequestBody @Valid UserDto user, @PathVariable long userId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAuthenticated(userId, auth.getUsername())) {
             userService.updateUser(userId, user);
-            return new ResponseEntity<>(userService.getUserById(userId), new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(UserDto.convert(userService.getUserById(userId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -69,7 +70,7 @@ public class UserController {
         userService.createUser(user);
         log.debug("registered new user: " + user.getFirstName() + " " + user.getLastName());
         securityService.login(user.getEmail(), user.getPassword());
-        return new ResponseEntity<>(userService.getUserByEmail(user.getEmail()), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(UserDto.convert(userService.getUserByEmail(user.getEmail())), new HttpHeaders(), HttpStatus.OK);
     }
 
     @DeleteMapping("{userId}/delete")

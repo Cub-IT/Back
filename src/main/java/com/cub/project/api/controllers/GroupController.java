@@ -25,9 +25,9 @@ public class GroupController {
     private final UserPermissionService permissionService;
 
     @GetMapping("{groupId}")
-    public ResponseEntity<Group> getGroupData(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
+    public ResponseEntity<?> getGroupData(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isMember(groupId, auth.getUsername())) {
-            return new ResponseEntity<>(groupService.getGroupById(groupId), new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(GroupDto.convert(groupService.getGroupById(groupId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -39,7 +39,7 @@ public class GroupController {
     }
 
     @GetMapping("{groupId}/posts")
-    public ResponseEntity<Collection<Post>> getPosts(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
+    public ResponseEntity<?> getPosts(@PathVariable long groupId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isMember(groupId, auth.getUsername())) {
             return new ResponseEntity<>(groupService.getGroupById(groupId).getPosts(), new HttpHeaders(), HttpStatus.OK);
         }
@@ -68,7 +68,7 @@ public class GroupController {
     public ResponseEntity<?> editGroup(@PathVariable long groupId, @RequestBody GroupDto group, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAdmin(groupId, auth.getUsername())) {
             groupService.updateGroup(group);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(GroupDto.convert(groupService.getGroupById(groupId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
