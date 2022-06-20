@@ -6,6 +6,7 @@ import com.cub.project.domain.models.Participant;
 import com.cub.project.domain.models.Role;
 import com.cub.project.domain.models.User;
 import com.cub.project.repository.GroupRepository;
+import com.cub.project.repository.ParticipantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,6 +26,7 @@ import com.cub.project.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final ParticipantRepository participantRepository;
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
 
@@ -106,7 +108,8 @@ public class UserService {
         user.addParticipant(participant);
         group.addParticipant(participant);
 
-        userRepository.save(user);
+        participantRepository.save(participant);
+        //userRepository.save(user);
         //groupRepository.save(group);
     }
 }
