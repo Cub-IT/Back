@@ -25,7 +25,7 @@ public class PostController {
     @GetMapping("{postId}")
     public ResponseEntity<?> showPost(@PathVariable long postId, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToShow(postId, auth.getUsername())) {
-            return new ResponseEntity<>(postService.getPostById(postId), new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(PostDto.convert(postService.getPostById(postId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -43,7 +43,7 @@ public class PostController {
     public ResponseEntity<?> editPost(@PathVariable long postId, @RequestBody @Valid PostDto data, @AuthenticationPrincipal UserDetails auth) {
         if (permissionService.isAllowedToManage(postId, auth.getUsername())) {
             postService.updatePost(data);
-            return new ResponseEntity<>(postService.getPostById(postId), new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(PostDto.convert(postService.getPostById(postId)), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
