@@ -1,8 +1,8 @@
 package com.cub.project.repository;
 
 import com.cub.project.domain.models.Group;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GroupRepository extends CrudRepository<Group, Long> {
+public interface GroupRepository extends JpaRepository<Group, Long> {
     boolean existsByCode(String code);
 }
