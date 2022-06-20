@@ -60,7 +60,7 @@ public class GroupService {
         group.addParticipant(participant);
         creator.addParticipant(participant);
         groupRepository.save(group);
-        userRepository.save(creator);
+        //userRepository.save(creator);
         //participantRepository.save(participant);
     }
 
@@ -88,5 +88,5 @@ public class GroupService {
         group.getParticipants().removeIf((user) -> user.getId() == userId);
         groupRepository.save(group);
     }
-    
+
 }

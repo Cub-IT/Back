@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 import org.springframework.context.MessageSource;
 import com.cub.project.repository.UserRepository;
@@ -49,12 +50,14 @@ public class UserService {
     }
 
     public void createUser(UserDto userDTO) {
+        String[] colors = {"#161725", "#3897832", "#3320945", "#5664378", "#14228064", "#153498"};
+        int rnd = new Random().nextInt(colors.length);
         User user = User.builder()
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
-                .color(userDTO.getColor()).build();
+                .color(colors[rnd]).build();
         userRepository.save(user);
     }
 
@@ -104,6 +107,6 @@ public class UserService {
         group.addParticipant(participant);
 
         userRepository.save(user);
-        groupRepository.save(group);
+        //groupRepository.save(group);
     }
 }
