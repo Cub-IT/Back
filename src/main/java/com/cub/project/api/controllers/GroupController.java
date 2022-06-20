@@ -79,7 +79,7 @@ public class GroupController {
     @DeleteMapping("{groupId}/delete")
     public ResponseEntity<?> deleteGroup(@PathVariable long groupId, Principal auth) {
         if (permissionService.isAdmin(groupId, auth.getName())) {
-            groupService.deleteGroup(groupId, auth.getName());
+            groupService.deleteGroup(groupId);
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
