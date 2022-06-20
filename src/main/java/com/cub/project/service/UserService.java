@@ -91,20 +91,22 @@ public class UserService {
 
     public void leaveGroup(long userId, long groupId) {
         User user = getUserById(userId);
-        user.getGroups().removeIf((group) -> group.getId() == groupId);
+        user.getParticipants().removeIf(p -> p.getGroup().getId() == groupId);
         userRepository.save(user);
     }
 
     public void joinGroup(long userId, String code) {
         User user = getUserById(userId);
-        Group group = groupRepository.findByCode(code);
+        if (groupRepository.existsByCode(code)) {
+            Group group = groupRepository.findByCode(code);
 
-        Participant participant = Participant.builder()
-                .user(user)
-                .group(group)
-                .assertionDate(LocalDate.now())
-                .role(Role.MEMBER).build();
+            Participant participant = Participant.builder()
+                    .user(user)
+                    .group(group)
+                    .assertionDate(LocalDate.now())
+                    .role(Role.MEMBER).build();
 
-        participantRepository.save(participant);
+            participantRepository.save(participant);
+        }
     }
 }

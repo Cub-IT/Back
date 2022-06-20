@@ -2,6 +2,7 @@ package com.cub.project.api.controllers;
 
 import com.cub.project.domain.dto.GroupDto;
 import com.cub.project.domain.dto.PostDto;
+import com.cub.project.domain.dto.UserDto;
 import com.cub.project.domain.models.Group;
 import com.cub.project.domain.models.Post;
 import com.cub.project.domain.models.User;
@@ -44,6 +45,14 @@ public class GroupController {
     public ResponseEntity<?> getPosts(@PathVariable long groupId, Principal auth) {
         if (permissionService.isMember(groupId, auth.getName())) {
             return new ResponseEntity<>(groupService.getGroupById(groupId).getPosts().stream().map(PostDto::convert), new HttpHeaders(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("{groupId}/participants")
+    public ResponseEntity<?> getParticipants(@PathVariable long groupId, Principal auth) {
+        if (permissionService.isMember(groupId, auth.getName())) {
+            return new ResponseEntity<>(groupService.getGroupById(groupId).getParticipants().stream().map(p -> UserDto.convert(p.getUser())), new HttpHeaders(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
