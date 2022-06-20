@@ -38,10 +38,10 @@ public class User {
 //    private Set<UserRole> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    transient private List<Participant> participants = new ArrayList<>();
+    private List<Participant> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    transient private List<Post> posts = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     public void addParticipant(Participant participant) {
         if (participants == null) {

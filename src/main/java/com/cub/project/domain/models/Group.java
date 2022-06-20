@@ -40,10 +40,10 @@ public class Group {
     private LocalDate creationDate;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    transient private List<Participant> participants = new ArrayList<>();
+    private List<Participant> participants = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    transient private List<Post> posts = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     public void addParticipant(Participant participant) {
         if (participants == null) {
