@@ -19,7 +19,7 @@ public class GroupDto {
     private String code;
     private LocalDate creationDate;
     private String ownerFirstName;
-    private String ownerlastName;
+    private String ownerLastName;
 
     public static GroupDto convert(Group group) {
         User owner = group.getOwner().getUser();
